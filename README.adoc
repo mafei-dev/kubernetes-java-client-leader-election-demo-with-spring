@@ -13,8 +13,8 @@ link:Dockerfile[Dockerfile]
 
 [source,shellscript]
 ----
-docker build -t mafeidev/k8s-leader-election-demo-spring-2:1.0.1 .
-docker push mafeidev/k8s-leader-election-demo-spring-2:1.0.1
+docker build -t mafeidev/k8s-leader-election-spring-demo:1.0.0 .
+docker push mafeidev/k8s-leader-election-spring-demo:1.0.0
 ----
 
 == Creates RBAC related manifests
