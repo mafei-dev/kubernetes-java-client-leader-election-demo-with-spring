@@ -4,7 +4,7 @@
 
 [source,shellscript]
 ----
-./mvnw clean install -DskipTests=true
+./mvnw clean package -DskipTests=true
 ----
 
 == Create docker image and upload the dockerHub.
