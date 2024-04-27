@@ -1,5 +1,5 @@
 source ./docker-push.sh
 
-kubectl apply -f RBAC.yaml
-kubectl apply -f deployment.yaml
+kubectl apply -f ./k8s/RBAC.yaml
+kubectl apply -f ./k8s/deployment.yaml
 

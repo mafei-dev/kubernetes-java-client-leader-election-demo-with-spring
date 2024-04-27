@@ -16,7 +16,7 @@ spec:
       restartPolicy: Always
       containers:
         - name: k8s-leader-election-spring-demo
-          image: mafeidev/k8s-leader-election-spring-demo
+          image: mafeidev/k8s-leader-election-spring-demo:1.0.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
