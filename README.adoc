@@ -1,0 +1,95 @@
+= kubernetes Java Client with Spring boot Demo (Without spring cloud kubernetes starter)
+
+== Create Jar
+
+[source,shellscript]
+----
+./mvnw clean install -DskipTests=true
+----
+
+== Create docker image and upload the dockerHub.
+
+link:Dockerfile[Dockerfile]
+
+[source,shellscript]
+----
+docker build -t mafeidev/k8s-leader-election-demo-spring-2:1.0.1 .
+docker push mafeidev/k8s-leader-election-demo-spring-2:1.0.1
+----
+
+== Creates RBAC related manifests
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: order-service-service-account
+  namespace: default
+----
+
+[source,yaml]
+----
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: leader-election-lease-role
+  namespace: default
+rules:
+  - apiGroups: [ "","coordination.k8s.io" ]
+    resources: [ "endpoints","leases" ]
+    verbs: [ "get", "list", "watch", "create", "update", "patch", "delete" ]
+----
+
+IMPORTANT: To access lease object related data from the API you should add `coordination.k8s.io` api-group into the `apiGroups` array.
+
+[source,yaml]
+----
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: order-service-service-account-leader-election-lease-role
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: order-service-service-account
+    namespace: default
+roleRef:
+  kind: Role
+  name: leader-election-lease-role
+  apiGroup: rbac.authorization.k8s.io
+----
+
+== Create Deployment manifest
+
+[source,yaml]
+----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-leader-election-spring-demo-deployment
+spec:
+  selector:
+    matchLabels:
+      app: k8s-leader-election-spring-demo
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: k8s-leader-election-spring-demo
+    spec:
+      serviceAccountName: order-service-service-account
+      restartPolicy: Always
+      containers:
+        - name: k8s-leader-election-spring-demo
+          image: mafeidev/k8s-leader-election-spring-demo
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+----
+
+IMPORTANT: #`serviceAccountName: order-service-service-account`# binding service account is required.
+
+=== Apply the manifest files
+
+link:k8s/RBAC.yaml[RBAC.yaml] and link:k8s/deployment.yaml[deployment.yaml]

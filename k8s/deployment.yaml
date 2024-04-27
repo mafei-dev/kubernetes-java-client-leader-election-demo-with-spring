@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-leader-election-spring-demo-deployment
+spec:
+  selector:
+    matchLabels:
+      app: k8s-leader-election-spring-demo
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: k8s-leader-election-spring-demo
+    spec:
+      serviceAccountName: order-service-service-account
+      restartPolicy: Always
+      containers:
+        - name: k8s-leader-election-spring-demo
+          image: mafeidev/k8s-leader-election-spring-demo
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+
+
