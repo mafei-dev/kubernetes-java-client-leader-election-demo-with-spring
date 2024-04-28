@@ -1,4 +1,4 @@
-= kubernetes Java Client with Spring boot Demo (Without spring cloud kubernetes starter)
+= kubernetes Java Client Leader Election demo with Spring boot (Without spring cloud kubernetes starter)
 
 == Create Jar
 
